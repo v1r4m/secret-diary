@@ -97,7 +97,11 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
   const githubIssueList = async (id: String) => {
     try {
       const github = id.substring(1);
-      const response = await fetch(`https://api.github.com/repos/${github}/issue-diary-${github}/issues?per_page=100`);
+      const header = {
+        'Accept': 'application/json',
+        'Authorization': `token ${process.env.GITHUB_TOKEN}`
+      };
+      const response = await fetch(`https://api.github.com/repos/${github}/issue-diary-${github}/issues?per_page=100`, { headers: header });
       const data = await response.json();
       return data;
     } catch (error) {
