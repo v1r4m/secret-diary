@@ -1,5 +1,5 @@
 {
-  "name": "secret-diary",
+  "name": "diary",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,21 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "moment-timezone": "^0.5.45",
-    "next": "14.2.2",
+    "framer-motion": "^10.16.16",
+    "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-markdown": "^9.0.1",
-    "react-swipeable": "^7.0.1"
+    "react-draggable": "^4.4.6",
+    "react-markdown": "^9.0.1"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.2",
+    "eslint-config-next": "14.0.4",
+    "moment-timezone": "^0.5.33",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "react-markdown": "^9.0.1",
+    "react-spring": "9.7.3",
+    "react-swipeable": "^6.1.0",
+    "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }
 }
