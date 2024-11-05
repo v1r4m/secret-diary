@@ -268,4 +268,3 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
 //나는 4번을 골랐다. ㅎ
 
 export default CalendarApp;
-
