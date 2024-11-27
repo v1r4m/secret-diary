@@ -51,6 +51,8 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
   const [selectedDay, setSelectedDay] = useState<string>();
   const calendarRef = useRef<HTMLDivElement>(null);
   const [calendarWidth, setCalendarWidth] = useState(0);
+  const [page, setPage] = useState<number>(1);
+  const issueMap = new Map();
   // const [vh, setVh] = useState(0);
   // useEffect(() => {
   //   setVh(window.innerHeight * 0.01);
@@ -76,6 +78,8 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
   const handleSwipeRight = () => {
     const prevMonth = new Date(currentMonth);
     prevMonth.setMonth(currentMonth.getMonth() - 1);
+    setPage(page + 1);
+    githubIssueList(id,page);
     setCurrentMonth(prevMonth);
   };
 
@@ -94,15 +98,16 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
     setIsBottomSheetVisible(true);
   }
 
-  const githubIssueList = async (id: String) => {
+  const githubIssueList = async (id: String, page:Number) => {
     try {
       const github = id.substring(1);
       const header = {
         'Accept': 'application/json',
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`
       };
-      const response = await fetch(`https://api.github.com/repos/${github}/issue-diary-${github}/issues?per_page=100`, { headers: header });
+      const response = await fetch(`https://api.github.com/repos/${github}/issue-diary-${github}/issues?page=${page}`, { headers: header });
       const data = await response.json();
+      setIssues(data);
       return data;
     } catch (error) {
       console.error('An error occurred in the async function', error);
@@ -111,13 +116,13 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
 
 
   useEffect(() => {
-    githubIssueList(id);
+    githubIssueList(id,1);
   }, [id]);
 
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const data = await githubIssueList(id);
+        const data = await githubIssueList(id,1);
         setIssues(data);
       } catch (error) {
         console.error('An error occurred while fetching issues', error);
@@ -138,14 +143,13 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
     return text.replace(imgTagRegex, (match: string, alt: string, src: string) => `![image](${src})`);
   }
 
-  const renderCalendar = () => {
+  const renderCalendar = (issueMap:Map<string,any>) => {
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
     const daysInMonth = getDaysInMonth(year, month);
     const firstDay = getFirstDayOfMonth(year, month);
     const blanks = Array(firstDay).fill(null);
     // Create a map of issues by date
-    const issueMap = new Map();
     issues.forEach(issue => {
       const createdAt = moment(issue.created_at).tz('Asia/Seoul').format().split('T')[0];
       issueMap.set(createdAt, issue);
@@ -224,7 +228,7 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
               />
       </div>
       <div className="h-3/5 overflow-auto">
-        {renderCalendar()}
+        {renderCalendar(issueMap)}
       </div>
       <div className="h-1/10 grid grid-cols-2 max-w-s mx-auto gap-2">
         <button className="py-2 text-center" onClick={handleSwipeRight}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
@@ -240,7 +244,7 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
         <p className="text-center">{currentMonth.toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}</p>
       </div>
       <div>
-        <Day year={currentMonth.getFullYear()} month={currentMonth.getMonth() + 1} date={currentMonth.getDate()} />
+        {/* <Day year={currentMonth.getFullYear()} month={currentMonth.getMonth() + 1} date={currentMonth.getDate()} /> */}
       </div>
       {isBottomSheetVisible && (
         <>
