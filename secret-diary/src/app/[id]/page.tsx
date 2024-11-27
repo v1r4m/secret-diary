@@ -107,7 +107,7 @@ const CalendarApp: React.FC<{}> = () => { // Use the 'DayProps' type as the type
       };
       const response = await fetch(`https://api.github.com/repos/${github}/issue-diary-${github}/issues?page=${page}`, { headers: header });
       const data = await response.json();
-      setIssues(data);
+      setIssues(data); 
       return data;
     } catch (error) {
       console.error('An error occurred in the async function', error);
